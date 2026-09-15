@@ -1,4 +1,14 @@
 const PABOTIK_DATA = {
+  platformConfig: {
+    officialEmail: 'pabotikinvestment@gmail.com',
+    explorerAccess: 'Free',
+    publisherPlans: [
+      { id: 'monthly', name: 'Monthly publisher', price: 10, interval: 'month' },
+      { id: 'annual', name: 'Annual publisher', price: 99, interval: 'year' }
+    ],
+    commissionNote: 'Commission and special partner rates are negotiated with each property or operator before publishing.',
+    paymentStatus: 'Publisher payments require a connected payment provider before launch.'
+  },
   categories: [
     { id: 'fishing', name: 'Big Game Fishing', icon: '✦', image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/57/Fishing_Boats%2C_Mathiveri%2C_Maldives.jpg/960px-Fishing_Boats%2C_Mathiveri%2C_Maldives.jpg' },
     { id: 'snorkeling', name: 'Snorkeling', icon: '◌', image: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5f/Snorkeling_in_the_Indian_Ocean_in_the_Maldives..JPG/960px-Snorkeling_in_the_Indian_Ocean_in_the_Maldives..JPG' },
@@ -103,17 +113,17 @@ const PABOTIK_DATA = {
     { name: 'Adaaran Prestige Vadoo', type: 'Resort', location: 'South Male Atoll', bio: 'A private-island resort at the gateway to the South Atolls with villas, reef access and ocean activities.', provides: ['Private island', 'Villas', 'House reef', 'Ocean activities'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/adaaran-prestige-vadoo' },
     { name: 'Adaaran Select Hudhuranfushi', type: 'Resort', location: 'North Male Atoll', bio: 'A tropical surf-island resort surrounded by water and vegetation, designed for beach days and active escapes.', provides: ['Surf access', 'Beach resort', 'Water sports', 'Family stays'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/adaaran-select-hudhuranfushi' },
     { name: 'Adaaran Select Meedhupparu', type: 'Resort', location: 'Raa Atoll', bio: 'A full-island Maldives resort with beach and lagoon accommodation, dining and marine activities.', provides: ['Island resort', 'Beach villas', 'Dining', 'Marine activities'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/adaaran-select-meedhupparu' },
-    { name: 'Alila Kothaifaru Maldives', type: 'Resort', location: 'Raa Atoll', bio: 'A private island retreat in scenic Raa Atoll, surrounded by a house reef and natural lagoon.', provides: ['House reef', 'Private island', 'Wellness', 'Diving and snorkelling'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/alila-kothaifaru-maldives' },
+    { name: 'Alila Kothaifaru Maldives', type: 'Resort', location: 'Raa Atoll', bio: 'A private island retreat in scenic Raa Atoll, surrounded by a house reef and natural lagoon.', provides: ['House reef', 'Private island', 'Wellness', 'Diving and snorkelling'], price: 'Live quote by date', source: 'Visit Maldives directory', image: 'https://visitmaldives.s3.amazonaws.com/5oBzmNoG/c/eb18gmwc-gallery-carousel.jpg', url: 'https://visitmaldives.com/en/resorts/alila-kothaifaru-maldives' },
     { name: 'Alimatha Aquatic Resort', type: 'Resort', location: 'Vaavu Atoll', bio: 'An island resort known for its fine-sand beach, lagoon setting and access to Vaavu marine experiences.', provides: ['Beach resort', 'Lagoon access', 'Diving', 'Water activities'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/alimatha-resort' },
     { name: 'Amilla Maldives', type: 'Resort', location: 'Baa Atoll', bio: 'A private island retreat in the UNESCO Biosphere Reserve of Baa Atoll, with beaches, reef and resort experiences.', provides: ['Private island', 'Biosphere Reserve', 'Dining', 'Wellness'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/amilla-maldives' },
     { name: 'Ananea Madivaru Maldives', type: 'Resort', location: 'North Ari Atoll', bio: 'An island resort with multiple dining venues, pools and access to the marine life of Ari Atoll.', provides: ['Island resort', 'Dining venues', 'Pools', 'Marine excursions'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/resorts/ananea-madivaru-maldives' },
-    { name: 'Bliss Dhigurah', type: 'Guesthouse', location: 'South Ari Atoll', bio: 'A local-island guesthouse base for whale-shark trips, manta encounters, diving, nature and beach time.', provides: ['Local island stay', 'Whale-shark trips', 'Manta trips', 'Diving'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/guesthouses/bliss-dhigurah' },
+    { name: 'Bliss Dhigurah', type: 'Guesthouse', location: 'South Ari Atoll', bio: 'A local-island guesthouse base for whale-shark trips, manta encounters, diving, nature and beach time.', provides: ['Local island stay', 'Whale-shark trips', 'Manta trips', 'Diving'], price: 'Live quote by date', source: 'Visit Maldives directory', image: 'https://visitmaldives.s3.amazonaws.com/NQoQDJqv/c/ldpqcgzz-gallery-carousel.jpg', url: 'https://visitmaldives.com/en/guesthouses/bliss-dhigurah' },
     { name: 'Kaani Hotels & Resorts', type: 'Guesthouse', location: 'Maafushi, South Male Atoll', bio: 'A local-island accommodation option with access to Maafushi excursions, beaches and marine activities.', provides: ['Local island stay', 'Excursion access', 'Beach time', 'Water sports'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/guesthouses/kaani-palm-beach' },
     { name: 'Plumeria', type: 'Guesthouse', location: 'Thinadhoo, Vaavu Atoll', bio: 'Comfortable local-island accommodation for guests combining island life with Vaavu diving and water activities.', provides: ['Local island stay', 'Diving access', 'Water activities', 'Island culture'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/guesthouses/plumeria' },
     { name: 'Sky Beach Maldives', type: 'Guesthouse', location: 'Dhiffushi, North Male Atoll', bio: 'An affordable local-island stay with rooms and family suites close to the beaches and excursions of Dhiffushi.', provides: ['Local island stay', 'Family suites', 'Beach access', 'Excursions'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/guesthouses/sky-beach-maldives' },
-    { name: 'Fiyavalhu Maldives', type: 'Hotel', location: 'Mandhoo, South Ari Atoll', bio: 'An all-island hotel experience on Mandhoo, surrounded by the natural landscapes of South Ari Atoll.', provides: ['Island hotel', 'Local island setting', 'Dining', 'Nature experiences'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/hotels/fiyavalhu-maldives' },
+    { name: 'Fiyavalhu Maldives', type: 'Hotel', location: 'Mandhoo, South Ari Atoll', bio: 'An all-island hotel experience on Mandhoo, surrounded by the natural landscapes of South Ari Atoll.', provides: ['Island hotel', 'Local island setting', 'Dining', 'Nature experiences'], price: 'Live quote by date', source: 'Visit Maldives directory', image: 'https://visitmaldives.s3.amazonaws.com/Z7wzavoW/c/t8nmpgbo-gallery-carousel.jpg', url: 'https://visitmaldives.com/en/hotels/fiyavalhu-maldives' },
     { name: 'The Barefoot Eco Hotel', type: 'Hotel', location: 'Hanimaadhoo, Haa Dhaalu Atoll', bio: 'An eco-focused island hotel with nature, conservation and local-island experiences in the north of the Maldives.', provides: ['Eco stay', 'Local island setting', 'Nature experiences', 'Conservation'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/hotels/the-barefoot-eco-hotel' },
-    { name: 'Scubaspa Ying', type: 'Liveaboard', location: 'Maldives atolls', bio: 'A liveaboard experience designed around moving between Maldivian dive sites and marine environments.', provides: ['Liveaboard stay', 'Multi-atoll diving', 'Dive support', 'Marine excursions'], price: 'Live quote by date', source: 'Visit Maldives directory', url: 'https://visitmaldives.com/en/liveaboards/scubaspa-ying' }
+    { name: 'Scubaspa Ying', type: 'Liveaboard', location: 'Maldives atolls', bio: 'A liveaboard experience designed around moving between Maldivian dive sites and marine environments.', provides: ['Liveaboard stay', 'Multi-atoll diving', 'Dive support', 'Marine excursions'], price: 'Live quote by date', source: 'Visit Maldives directory', image: 'https://visitmaldives.s3.amazonaws.com/KYyRBkqR/c/nfexwano-gallery-carousel.jpg', url: 'https://visitmaldives.com/en/liveaboards/scubaspa-ying' }
   ],
   shopProducts: [
     { id: 'pearl-tide-necklace', name: 'Pearl Tide Necklace', category: 'Pearls', description: 'A delicate island-inspired necklace, handmade in small batches.', price: null, material: 'Pearl / recycled cord', image: '' },
@@ -123,6 +133,28 @@ const PABOTIK_DATA = {
     { id: 'island-weave-pouch', name: 'Island Weave Pouch', category: 'Handmade gifts', description: 'A small woven pouch for keepsakes, made for slow island days.', price: null, material: 'Natural fibre / cotton', image: '' },
     { id: 'ocean-memory-set', name: 'Ocean Memory Gift Set', category: 'Gift sets', description: 'A future curated set of handmade island pieces, packaged with care.', price: null, material: 'Seasonal handmade materials', image: '' }
   ],
+  officialGuide: {
+    facts: [
+      { value: '1,192', label: 'islands across the archipelago' },
+      { value: '26', label: 'natural atolls in a double chain' },
+      { value: '200', label: 'inhabited islands' },
+      { value: '5%', label: 'of the planet’s reefs found here' }
+    ],
+    guides: [
+      { title: 'Geography', text: 'Explore the island nation, atolls, reefs, lagoons and the small islands that shape every journey.', url: 'https://visitmaldives.com/en/maldives/geography', action: 'Discover geography' },
+      { title: 'People and culture', text: 'Learn about Dhivehi language, island communities, dhoni boatbuilding, cuisine, music and traditional crafts.', url: 'https://visitmaldives.com/en/maldives/culture', action: 'Explore culture' },
+      { title: 'Marine environment', text: 'Travel thoughtfully around reefs, marine protected areas, wetlands and fragile island ecosystems.', url: 'https://visitmaldives.com/en/maldives/environment', action: 'Travel responsibly' },
+      { title: 'Plan your arrival', text: 'Find registered travel agents and transport providers for transfers, domestic flights and seaplane connections.', url: 'https://visitmaldives.com/en/directory/travel-agents', secondaryUrl: 'https://visitmaldives.com/en/directory/transport-provider', action: 'Plan transport' }
+    ],
+    links: [
+      { label: 'Official resort directory', url: 'https://visitmaldives.com/en/resorts' },
+      { label: 'Official hotel directory', url: 'https://visitmaldives.com/en/hotels' },
+      { label: 'Official guesthouse directory', url: 'https://visitmaldives.com/en/guesthouses' },
+      { label: 'Official liveaboard directory', url: 'https://visitmaldives.com/en/liveaboards' },
+      { label: 'Official experiences', url: 'https://visitmaldives.com/en/experience' },
+      { label: 'Virtual tours', url: 'https://visitmaldives.com/en/360-tours' }
+    ]
+  },
   officialDirectories: [
     { title: 'Registered resorts', description: 'Browse the official Visit Maldives resort directory and property profiles.', label: 'View resorts', url: 'https://visitmaldives.com/en/resorts', icon: '⌂' },
     { title: 'Local tourism guesthouses', description: 'Find guesthouses on inhabited islands through the national tourism directory.', label: 'View guesthouses', url: 'https://visitmaldives.com/en/guesthouses', icon: '⌁' },

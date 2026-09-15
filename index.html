@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=10">
+  <link rel="stylesheet" href="styles.css?v=15">
 </head>
 <body>
   <header class="site-header">
@@ -17,9 +17,9 @@
       <button class="back-button" id="back-button" type="button" aria-label="Go back">← <span>Back</span></button>
       <button class="logo-placeholder" type="button" data-scroll="top" aria-label="Pabotik Travels home"><span></span><strong>PABOTIK<br>TRAVELS</strong></button>
       <nav class="main-nav" aria-label="Main navigation">
-        <a href="#experiences">Experiences</a><a href="#official-directory">Stay in Maldives</a><a href="#shop">Evershell.mv shop</a><a href="#why-pabotik">Why Pabotik</a><a href="#support">Support</a>
+        <a href="#experiences">Experiences</a><a href="#official-directory">Stay in Maldives</a><a href="#discover-maldives">Discover Maldives</a><a href="#shop">Evershell.mv shop</a><a href="#why-pabotik">Why Pabotik</a><a href="#support">Support</a>
       </nav>
-      <div class="nav-actions"><button class="nav-utility" type="button">USD <span>⌄</span></button><button class="nav-utility" type="button">EN <span>⌄</span></button><button class="link-button" data-open-booking="sunset-dolphin-cruise">My booking</button><button class="account-button" id="account-button" type="button">♙ <span>Sign in</span></button><button class="host-button" type="button">List your experience</button><button class="menu-button" type="button" aria-label="Open menu">☰</button></div>
+      <div class="nav-actions"><button class="nav-utility" type="button">USD <span>⌄</span></button><button class="nav-utility" type="button">EN <span>⌄</span></button><button class="link-button" data-open-booking="sunset-dolphin-cruise">My booking</button><button class="account-button" id="account-button" type="button">♙ <span>Sign in</span></button><button class="host-button" id="host-button" type="button">List your experience</button><button class="menu-button" type="button" aria-label="Open menu">☰</button></div>
     </div>
   </header>
 
@@ -43,6 +43,8 @@
 
     <section class="official-section page-width" id="official-directory"><div class="section-top"><div><p class="kicker">OFFICIAL MALDIVES SOURCES</p><h2>Stay somewhere <em>legitimate.</em></h2></div><span class="source-badge">✓ Visit Maldives directory</span></div><p class="official-intro">Browse registered accommodation and tourism businesses through Visit Maldives, the Maldives national tourism promotion source. Property availability and prices change by date, room type and season.</p><div class="official-grid" id="official-grid"></div><div class="all-resorts-callout"><div><strong>Looking for every registered resort?</strong><span>The official resort registry is paginated and updated by Visit Maldives.</span></div><a class="button button-navy" href="https://visitmaldives.com/en/resorts" target="_blank" rel="noopener">Explore all resorts ↗</a></div><div class="price-disclaimer"><strong>About prices</strong><span>Experience prices shown above are indicative Pabotik demo values until a live operator rate is connected. Accommodation prices are not invented here: use the official property profile or request a current quote for your dates.</span></div></section>
 
+    <section class="discover-section page-width" id="discover-maldives"><div class="section-top"><div><p class="kicker">OFFICIAL DESTINATION GUIDE</p><h2>Know the islands before you <em>go.</em></h2></div><a class="source-badge" href="https://visitmaldives.com/en" target="_blank" rel="noopener">Visit Maldives ↗</a></div><p class="official-intro">Destination facts and planning links are drawn from Visit Maldives, the official Maldives tourism source. Use the directories below for current property details, availability and booking contacts.</p><div class="guide-facts" id="guide-facts"></div><div class="guide-grid" id="guide-grid"></div><div class="guide-links" id="guide-links"></div></section>
+
     <section class="shop-section" id="shop"><div class="page-width"><div class="shop-masthead"><div><p class="kicker">PABOTIK PRESENTS</p><h2><em>Evershell.mv</em></h2><p>Inspired by nature. Made by hand.</p></div><button class="shop-bag-button" id="shop-bag-button" type="button">Purchase requests <span id="shop-bag-count">0</span> ↗</button></div><div class="shop-shipping-note"><strong>Shipping to Male’ available</strong><span>Submit your item request and the Evershell.mv admin will contact you with the final price, delivery timing and payment instructions before shipping.</span></div><div class="shop-intro"><p>Small island objects, shaped by the sea and made with natural materials. Add your own product photos and final prices later; the purchase-request flow is ready now.</p><div class="shop-filters" id="shop-filters"><button class="active" data-shop-category="all" type="button">All pieces</button><button data-shop-category="Pearls" type="button">Pearls</button><button data-shop-category="Earrings" type="button">Earrings</button><button data-shop-category="Bracelets" type="button">Bracelets</button><button data-shop-category="Handmade gifts" type="button">Gifts</button></div></div><div class="shop-grid" id="shop-grid"></div></div></section>
 
     <section class="newsletter-band" id="support"><div class="page-width newsletter-inner"><div><p class="kicker light">A LITTLE BLUE IN YOUR INBOX</p><h2>Keep the good days coming.</h2></div><form id="newsletter-form"><input type="email" placeholder="Your email address" required aria-label="Email address"><button class="button button-coral" type="submit">Join the list <span>→</span></button></form></div></section>
@@ -52,6 +54,6 @@
 
   <div class="modal-backdrop" id="modal-backdrop" hidden><div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><button class="modal-close" id="modal-close" type="button" aria-label="Close">×</button><div id="modal-content"></div></div></div>
   <aside class="support-bot" id="support-bot"><button class="bot-toggle" id="bot-toggle" type="button" aria-label="Open Pabotik support chat"><span class="bot-pulse"></span>✦<b>Chat</b></button><div class="bot-panel" id="bot-panel" hidden><div class="bot-header"><div><strong>Pabotik support</strong><span><i></i> Usually replies instantly</span></div><button id="bot-close" type="button" aria-label="Close chat">×</button></div><div class="bot-messages" id="bot-messages"><div class="bot-message">Hi, I’m here to help you find the right Maldives experience. What can I help with?</div><div class="bot-suggestions"><button type="button" data-chat="Which trip is best for families?">Family trips</button><button type="button" data-chat="What is included?">What's included?</button><button type="button" data-chat="How does booking work?">How booking works</button></div></div><form class="bot-form" id="bot-form"><input id="bot-input" placeholder="Ask about an experience..." aria-label="Message support" autocomplete="off"><button type="submit" aria-label="Send message">↑</button></form></div></aside>
-  <script src="data.js?v=9"></script><script src="app.js?v=11"></script>
+  <script src="data.js?v=10"></script><script src="app.js?v=13"></script>
 </body>
 </html>

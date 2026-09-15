@@ -4,6 +4,8 @@ const modal = $('#modal-backdrop');
 let selectedActivity = data.activities[0];
 let selectedBookingSlot = '';
 let shopCart = [];
+let bookingRequest = null;
+let selectedProperty = null;
 let currentFilters = { category: 'all', location: 'all', type: 'all', family: false, instant: false };
 
 function populateSelects() {
@@ -87,14 +89,28 @@ function activityCard(activity) {
 function renderOfficialDirectories() {
   $('#official-grid').innerHTML = data.officialDirectories.map((directory) => `<article class="official-card"><div class="official-icon">${directory.icon}</div><h3>${directory.title}</h3><p>${directory.description}</p><div class="official-links"><a href="${directory.url}" target="_blank" rel="noopener">${directory.label} ↗</a>${directory.secondaryUrl ? `<a href="${directory.secondaryUrl}" target="_blank" rel="noopener">Liveaboards ↗</a>` : ''}</div></article>`).join('');
 }
+function renderDiscoverGuide() {
+  const guide = data.officialGuide;
+  $('#guide-facts').innerHTML = guide.facts.map((fact) => `<div><strong>${fact.value}</strong><span>${fact.label}</span></div>`).join('');
+  $('#guide-grid').innerHTML = guide.guides.map((item) => `<article class="guide-card"><span class="guide-index">0${guide.guides.indexOf(item) + 1}</span><h3>${item.title}</h3><p>${item.text}</p><div><a href="${item.url}" target="_blank" rel="noopener">${item.action} ↗</a>${item.secondaryUrl ? `<a href="${item.secondaryUrl}" target="_blank" rel="noopener">Transport providers ↗</a>` : ''}</div></article>`).join('');
+  $('#guide-links').innerHTML = guide.links.map((link) => `<a href="${link.url}" target="_blank" rel="noopener">${link.label} ↗</a>`).join('');
+}
 function renderPropertyResults(query) {
   const normalized = query.trim().toLowerCase();
   if (!normalized) { $('#property-results').hidden = true; return; }
   const matches = data.properties.filter((property) => `${property.name} ${property.location} ${property.type}`.toLowerCase().includes(normalized));
   $('#property-results').hidden = false;
   $('#property-results-title').textContent = matches.length ? `Results for “${query}”` : `No local profile for “${query}” yet`;
-  $('#property-grid').innerHTML = matches.length ? matches.map((property) => `<article class="property-card"><div class="property-card-top"><span class="property-type">${property.type}</span><span class="property-source">✓ ${property.source}</span></div><h3>${property.name}</h3><p class="property-location">⌖ ${property.location}</p><p>${property.bio}</p><div class="property-provides">${property.provides.map((item) => `<span>${item}</span>`).join('')}</div><div class="property-card-footer"><strong>${property.price}</strong><div><a href="${property.url}" target="_blank" rel="noopener">Property details ↗</a>${property.bookingUrl ? `<a href="${property.bookingUrl}" target="_blank" rel="noopener">Check availability ↗</a>` : ''}</div></div></article>`).join('') : `<div class="property-empty"><strong>Search the complete official directory.</strong><p>This name is not in the locally cached profiles yet. Visit Maldives maintains the live resort, hotel and guesthouse registries.</p><a href="https://visitmaldives.com/en/resorts" target="_blank" rel="noopener">Open official resort directory ↗</a><a href="https://visitmaldives.com/en/guesthouses" target="_blank" rel="noopener">Open official guesthouse directory ↗</a></div>`;
+  $('#property-grid').innerHTML = matches.length ? matches.map((property) => `<article class="property-card"><div class="property-image">${property.image ? `<img src="${property.image}" alt="${property.name} official property photo"><span>Official property photo</span>` : '<div class="property-photo-pending"><strong>Official photos</strong><span>Open the property profile for the latest gallery</span></div>'}</div><div class="property-card-content"><div class="property-card-top"><span class="property-type">${property.type}</span><span class="property-source">✓ ${property.source}</span></div><h3>${property.name}</h3><p class="property-location">⌖ ${property.location}</p><p>${property.bio}</p><div class="property-provides">${property.provides.map((item) => `<span>${item}</span>`).join('')}</div><div class="property-card-footer"><strong>${property.price}</strong><div><a href="${property.url}" target="_blank" rel="noopener">Property details ↗</a><button class="button button-coral property-book-button" data-property-booking="${property.name}" type="button">Request booking</button></div></div></div></article>`).join('') : `<div class="property-empty"><strong>Search the complete official directory.</strong><p>This name is not in the locally cached profiles yet. Visit Maldives maintains the live resort, hotel and guesthouse registries.</p><a href="https://visitmaldives.com/en/resorts" target="_blank" rel="noopener">Open official resort directory ↗</a><a href="https://visitmaldives.com/en/guesthouses" target="_blank" rel="noopener">Open official guesthouse directory ↗</a></div>`;
+  document.querySelectorAll('[data-property-booking]').forEach((button) => button.addEventListener('click', () => openPropertyBooking(button.dataset.propertyBooking)));
   $('#property-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+function openPropertyBooking(name) {
+  selectedProperty = data.properties.find((property) => property.name === name);
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().slice(0, 10);
+  openModal(`<div class="booking-title"><p class="kicker">PABOTIK PROPERTY RESERVATION</p><h2>Request your stay at <em>${selectedProperty.name}</em>.</h2><p>${selectedProperty.type} / ${selectedProperty.location}</p></div><form class="booking-form" id="property-booking-form"><div class="form-grid"><label>Check-in<input id="property-checkin" type="date" min="${tomorrow}" required></label><label>Check-out<input id="property-checkout" type="date" min="${tomorrow}" required></label></div><div class="form-grid"><label>Adults<select id="property-adults"><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label><label>Children<select id="property-children"><option>0</option><option>1</option><option>2</option></select></label></div><div class="form-grid"><label>Guest name<input id="property-guest-name" required placeholder="Full name"></label><label>Email<input id="property-guest-email" type="email" required placeholder="you@example.com"></label></div><div class="form-grid"><label>WhatsApp / mobile<input id="property-guest-phone" required placeholder="+960 ..."></label><label>Room or villa preference<input id="property-room" placeholder="Optional preference"></label></div><label>Special requests<textarea id="property-notes" placeholder="Transfers, meals, celebrations, accessibility..."></textarea></label><div class="summary-box"><strong>How it works</strong><br><span>Pabotik sends this request to our official team. We contact the property manually, confirm availability and rate, then send the final confirmation back to you.</span></div><button class="button button-coral" type="submit">Send reservation request <span>→</span></button></form>`);
+  $('#property-checkin').value = tomorrow;
+  $('#property-booking-form').addEventListener('submit', (event) => { event.preventDefault(); const subject = `Property reservation request - ${selectedProperty.name}`; const body = [`New property reservation request from Pabotik Travels`, ``, `Property: ${selectedProperty.name}`, `Type: ${selectedProperty.type}`, `Location: ${selectedProperty.location}`, `Check-in: ${$('#property-checkin').value}`, `Check-out: ${$('#property-checkout').value}`, `Adults: ${$('#property-adults').value}`, `Children: ${$('#property-children').value}`, `Guest name: ${$('#property-guest-name').value}`, `Guest email: ${$('#property-guest-email').value}`, `WhatsApp / mobile: ${$('#property-guest-phone').value}`, `Room or villa preference: ${$('#property-room').value || 'None'}`, `Special requests: ${$('#property-notes').value || 'None'}`].join('\\n'); openModal(`<div class="confirmation"><div class="success-mark">✓</div><p class="kicker">REQUEST SENT</p><h2>We will reserve it <em>for you.</em></h2><p>Your request is ready for Pabotik to send to the hotel or resort. We will manually confirm the availability and price, then send the final reservation confirmation to your email.</p><a class="button button-coral" href="mailto:${data.platformConfig.officialEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">Open admin email draft <span>↗</span></a><button class="button button-navy" id="property-done" type="button">Back to experiences</button><p class="mail-note">The property website link is informational only. Your reservation request stays with Pabotik.</p></div>`); $('#property-done').addEventListener('click', closeModal); });
 }
 function renderShop(category = 'all') {
   const products = data.shopProducts.filter((product) => category === 'all' || product.category === category);
@@ -143,6 +159,11 @@ function openAccount() {
   tabs.forEach((tab, index) => tab.addEventListener('click', () => { tabs.forEach((item) => item.classList.remove('active')); tab.classList.add('active'); const create = index === 1; $('.account-name-field').hidden = !create; $('#account-submit').innerHTML = create ? 'Create account <span>→</span>' : 'Sign in <span>→</span>'; }));
   $('#account-form').addEventListener('submit', (event) => { event.preventDefault(); const name = $('.account-name-field input')?.value || $('#account-form input[type="email"]').value.split('@')[0]; localStorage.setItem('pabotik-user', name); closeModal(); updateAccountButton(); });
 }
+function openPublisherSignup() {
+  const plans = data.platformConfig.publisherPlans;
+  openModal(`<div class="publisher-panel"><p class="kicker">PABOTIK PARTNER PROGRAM</p><h2>Put your island business <em>on the map.</em></h2><p class="publisher-intro">Explorers browse and book for free. Resorts, guesthouses, tour operators and activity providers can request a listing and choose a publisher plan.</p><div class="publisher-plans">${plans.map((plan, index) => `<label class="publisher-plan"><input type="radio" name="publisher-plan" value="${plan.id}" ${index === 0 ? 'checked' : ''}><span><strong>$${plan.price} / ${plan.interval}</strong><small>${plan.name}</small></span></label>`).join('')}</div><div class="publisher-benefits"><span>✓ Editable business profile</span><span>✓ Enquiry and booking leads</span><span>✓ Partner rates and commission discussion</span></div><form class="publisher-form" id="publisher-form"><div class="form-grid"><label>Business name<input required placeholder="Resort, guesthouse or operator"></label><label>Business email<input type="email" required placeholder="business@example.com"></label></div><div class="form-grid"><label>Contact name<input required placeholder="Your name"></label><label>Phone / WhatsApp<input required placeholder="+960 ..."></label></div><label>Property or operating location<input required placeholder="Island / atoll"></label><label>What do you offer?<textarea required placeholder="Rooms, tours, diving, transfers..."></textarea></label><button class="button button-coral" type="submit">Send publisher request <span>→</span></button></form><p class="publisher-note">${data.platformConfig.paymentStatus} ${data.platformConfig.commissionNote}</p></div>`);
+  $('#publisher-form').addEventListener('submit', (event) => { event.preventDefault(); const selectedPlan = document.querySelector('input[name="publisher-plan"]:checked').value; const subject = `Publisher request - ${event.currentTarget.querySelector('input').value}`; const body = `New publisher request\\nPlan: ${selectedPlan}\\nPlease contact the business to verify details and arrange onboarding.`; openModal(`<div class="confirmation"><div class="success-mark">✓</div><p class="kicker">REQUEST READY</p><h2>We will review your <em>business.</em></h2><p>Your publisher request is ready to email to ${data.platformConfig.officialEmail}. The Pabotik team will verify the business, discuss commission or special rates, and confirm the subscription before publishing.</p><a class="button button-coral" href="mailto:${data.platformConfig.officialEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}">Open admin email draft <span>↗</span></a><button class="button button-navy" id="publisher-done" type="button">Back to experiences</button></div>`); $('#publisher-done').addEventListener('click', closeModal); });
+}
 function updateAccountButton() { const user = localStorage.getItem('pabotik-user'); $('#account-button').innerHTML = user ? `♙ <span>${user}</span>` : '♙ <span>Sign in</span>'; }
 function botReply(message) {
   const text = message.toLowerCase();
@@ -170,7 +191,7 @@ function openBooking(id) {
   ['booking-date', 'booking-adults', 'booking-children'].forEach((id) => $(`#${id}`).addEventListener('change', () => { if (id !== 'booking-date') selectedBookingSlot = ''; renderProviderAvailability(); updateBookingTotal(); }));
   renderProviderAvailability();
   updateBookingTotal();
-  $('#booking-form').addEventListener('submit', (event) => { event.preventDefault(); if (!selectedBookingSlot) { $('#availability-status').textContent = 'Select an available departure time to continue.'; return; } renderProviderAvailability(); if (!selectedBookingSlot) return; openPayment(); });
+  $('#booking-form').addEventListener('submit', (event) => { event.preventDefault(); if (!selectedBookingSlot) { $('#availability-status').textContent = 'Select an available departure time to continue.'; return; } renderProviderAvailability(); if (!selectedBookingSlot) return; bookingRequest = collectBookingRequest(); openPayment(); });
 }
 
 function updateBookingTotal() {
@@ -179,14 +200,42 @@ function updateBookingTotal() {
   $('#booking-summary').textContent = `${$('#booking-date').value} at ${selectedBookingSlot || 'a selected time'} / ${guests} guest${guests === 1 ? '' : 's'} / ${selectedActivity.duration}`;
 }
 
+function collectBookingRequest() {
+  const provider = data.providers[selectedActivity.providerId];
+  const payment = document.querySelector('input[name="payment"]:checked')?.value || 'Discuss with admin';
+  return {
+    activity: selectedActivity.name,
+    provider: provider?.name || 'Assigned experience provider',
+    date: $('#booking-date')?.value || bookingRequest?.date || '',
+    time: selectedBookingSlot,
+    adults: $('#booking-adults')?.value || bookingRequest?.adults || '0',
+    children: $('#booking-children')?.value || bookingRequest?.children || '0',
+    name: $('#customer-name')?.value || bookingRequest?.name || '',
+    email: $('#customer-email')?.value || bookingRequest?.email || '',
+    phone: $('#customer-phone')?.value || bookingRequest?.phone || '',
+    hotel: $('#customer-hotel')?.value || bookingRequest?.hotel || '',
+    pickup: $('#customer-pickup')?.value || bookingRequest?.pickup || 'To be confirmed',
+    notes: $('#customer-notes')?.value || bookingRequest?.notes || 'None',
+    payment,
+    total: $('#booking-total')?.textContent || bookingRequest?.total || '$0'
+  };
+}
+function bookingMailto() {
+  if (!bookingRequest) return '#';
+  const request = bookingRequest;
+  const subject = `New Pabotik booking request - ${request.activity}`;
+  const body = [`New reservation request from Pabotik Travels`, ``, `Activity: ${request.activity}`, `Provider: ${request.provider}`, `Date: ${request.date}`, `Departure: ${request.time}`, `Adults: ${request.adults}`, `Children: ${request.children}`, `Estimated total: ${request.total}`, ``, `Guest name: ${request.name}`, `Guest email: ${request.email}`, `WhatsApp / mobile: ${request.phone}`, `Hotel / guesthouse: ${request.hotel}`, `Pickup: ${request.pickup}`, `Payment method: ${request.payment}`, `Special requests: ${request.notes}`].join('\\n');
+  return `mailto:pabotikinvestment@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+
 function openPayment() {
   const total = $('#booking-total').textContent;
   openModal(`<div class="booking-title"><p class="kicker">SECURE YOUR RESERVATION</p><h2>Choose your <em>payment</em> method.</h2><p>${selectedActivity.name} / ${total} estimated total</p></div><div class="booking-form"><div class="summary-box">Payment methods are placeholders for now. No payment is processed on this demo site.</div><div class="payment-options">${data.payments.filter((payment) => payment.enabled).map((payment, index) => `<label class="payment-option"><input type="radio" name="payment" value="${payment.id}" ${index === 0 ? 'checked' : ''}><span><strong>${payment.name}</strong><small>${payment.detail}</small></span></label>`).join('')}</div><button class="button button-coral" id="payment-submit" type="button">Confirm reservation request <span>→</span></button><p style="color:var(--muted);font-size:11px">Your booking request will be reviewed and confirmation instructions will be shared by the Pabotik Travels team.</p></div>`);
-  $('#payment-submit').addEventListener('click', () => openConfirmation());
+  $('#payment-submit').addEventListener('click', () => { bookingRequest = { ...bookingRequest, payment: document.querySelector('input[name="payment"]:checked')?.value || 'Discuss with admin' }; openConfirmation(); });
 }
-function openConfirmation() { openModal(`<div class="confirmation"><div class="success-mark">✓</div><p class="kicker">REQUEST RECEIVED</p><h2>You're almost <em>there.</em></h2><p>Thank you for choosing Pabotik Travels. Your experience request is ready for confirmation. Our team will contact you with payment instructions and pickup details.</p><button class="button button-navy" id="done-button" type="button">Back to experiences</button></div>`); $('#done-button').addEventListener('click', closeModal); }
+function openConfirmation() { openModal(`<div class="confirmation"><div class="success-mark">✓</div><p class="kicker">REQUEST RECEIVED</p><h2>You're almost <em>there.</em></h2><p>Your booking details are ready. Open the generated email draft to send this request to <strong>pabotikinvestment@gmail.com</strong>. The Pabotik team will confirm availability and payment instructions.</p><a class="button button-coral" href="${bookingMailto()}">Open email draft <span>↗</span></a><button class="button button-navy" id="done-button" type="button">Back to experiences</button><p class="mail-note">Your email app will open with the recipient and booking details filled in. Press Send to deliver it.</p></div>`); $('#done-button').addEventListener('click', closeModal); }
 
-populateSelects(); renderCategories(); renderActivities(); renderOfficialDirectories(); renderShop(); setupCalendar();
+populateSelects(); renderCategories(); renderActivities(); renderOfficialDirectories(); renderDiscoverGuide(); renderShop(); setupCalendar();
 updateAccountButton();
 $('#search-button').addEventListener('click', () => { currentFilters.category = $('#search-category').value; currentFilters.location = $('#search-location').value; $('#filter-category').value = currentFilters.category; $('#filter-location').value = currentFilters.location; renderActivities(); $('#listing').scrollIntoView({ behavior: 'smooth' }); });
 $('#search-button').addEventListener('click', () => renderPropertyResults($('#search-location').value));
@@ -205,6 +254,7 @@ document.querySelectorAll('[data-scroll="top"]').forEach((button) => button.addE
 $('#newsletter-form').addEventListener('submit', (event) => { event.preventDefault(); event.currentTarget.innerHTML = '<span style="color:var(--aqua);font-weight:700">You are on the list. See you by the water.</span>'; });
 $('#back-button').addEventListener('click', () => { if (window.history.length > 1) window.history.back(); else window.scrollTo({ top: 0, behavior: 'smooth' }); });
 $('#account-button').addEventListener('click', openAccount);
+$('#host-button').addEventListener('click', openPublisherSignup);
 $('#bot-toggle').addEventListener('click', () => { $('#bot-panel').hidden = !$('#bot-panel').hidden; });
 $('#bot-close').addEventListener('click', () => { $('#bot-panel').hidden = true; });
 $('#bot-form').addEventListener('submit', (event) => { event.preventDefault(); const input = $('#bot-input'); sendBotMessage(input.value); input.value = ''; });
